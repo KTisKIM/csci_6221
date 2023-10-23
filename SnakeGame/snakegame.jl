@@ -13,27 +13,76 @@ BACKGROUND = colorant"#B2E684"
 #####################################
 snake_x = (WIDTH - side_info_bar) / 2 + side_info_bar
 snake_y = HEIGHT / 2
+snake_color = colorant"black"
 snake_size = 10
-snake_color = colorant"blue"
-
 snake_head = Rect(
     0, 0, snake_size, snake_size
 )
-snake_head_lastpos = (0, 0)
-snakebody = Queue{Rect}()  # Snake vector for storing snake body, first item is snake head
-obstacles = []
-apple = Rect(0, 0, snake_size, snake_size)
 
+snake_head_lastpos = (0, 0)
+snake_body = Queue{Rect}()  # Snake vector for storing snake body, first item is snake head
+
+##############################
+# Default info for the apple #
+##############################
+apple_x = 0     ### TODO
+apple_y = 0     ### TODO
+apple_color = colorant"red"
+apple_size = snake_size
+apple = Rect(
+    0, 0, snake_size, snake_size
+)
+
+
+obstacles = []
+
+###############
+# Snake moves #
+###############
 dx = 0
 dy = 10
 
+#########################################
+# Draw actors (Snake, Apple, Obstacles) #
+#########################################
+function draw()
+    # Draw Snake
+    draw(snake_head, snake_color, fill=true)
+    for s in snake_body
+        draw(s, snake_color, fill=true)
+    end
 
-function update_snake_length!(snakebody::Queue{Rect}, snake_head_lastpos, snake_size)
-    enqueue!(snakebody, Rect(snake_head_lastpos, (snake_size, snake_size)))
+    # Apple
+    draw(apple, apple_color, fill=true)
+
+    # Draw obstacles
+    for o in obstacles
+        draw(o, colorant"black", fill=true)
+    end
+end
+
+##############################################
+# Draw a Menu bar / Status display for users #
+##############################################
+function user_interface(g::Game)
+    # Side Menu Bar
+    # draw(snake_head, snake_color, fill=true)
+    # for s in 1:length(snake_body)
+    #     draw(snake_body[s], snake_color, fill=true)
+    # end
+
+    # Displaying Status
+    # draw(apple, apple_color, fill=true)
 end
 
 
-function update_snake_pos!(snake_head, snake_head_lastpos, snakebody::Queue{Rect}, dx, dy)
+
+function update_snake_length!(snake_body::Queue{Rect}, snake_head_lastpos, snake_size)
+    enqueue!(snake_body, Rect(snake_head_lastpos, (snake_size, snake_size)))
+end
+
+
+function update_snake_pos!(snake_head, snake_head_lastpos, snake_body::Queue{Rect}, dx, dy)
     """
     Update snake position, also check if snake has 
     * reached beyond border, if go ouside border, snake head appears on the other side of the map
@@ -43,8 +92,8 @@ function update_snake_pos!(snake_head, snake_head_lastpos, snakebody::Queue{Rect
     snake_head_lastpos = (snake_head.x, snake_head.y)
     snake_head.x += dx
     snake_head.y += dy
-    update_snake_length!(snakebody, snake_head_lastpos, snake_size)
-    dequeue!(snakebody)
+    update_snake_length!(snake_body, snake_head_lastpos, snake_size)
+    dequeue!(snake_body)
 
     # Check if reach border
     #  if border is reached and no obstacles, 
@@ -72,66 +121,12 @@ function update_snake_pos!(snake_head, snake_head_lastpos, snakebody::Queue{Rect
 end
 
 
-function draw()
-    """
-    Game loop
-    """
-    # Draw snake
-    draw(snake_head, colorant"gray", fill=true)
-    for s in snakebody
-        draw(s, colorant"black", fill=true)
-    end
-
-    # Draw obstacles
-    for o in obstacles
-        draw(o, colorant"black", fill=true)
-    end
-
-    # Draw apple
-    draw(apple, colorant"red", fill=true)
-end
-
-
 function update()
     """
     Game loop
     """
-    update_snake_pos!(snake_head, snake_head_lastpos, snakebody, dx, dy)
+    update_snake_pos!(snake_head, snake_head_lastpos, snake_body, dx, dy)
     sleep(0.05)
-end
-
-
-function on_key_down(g::Game, key)
-    global dx, dy
-    if key == Keys.UP
-        if dy == 0
-            dx = 0
-            dy = -snake_size
-        end
-    end
-
-    if key == Keys.DOWN
-        if dy == 0
-            dx = 0
-            dy = snake_size
-    
-        end
-    end
-
-    if key == Keys.LEFT
-        if dx == 0
-            dx = -snake_size
-            dy = 0
-        end
-    end
-
-    if key == Keys.RIGHT
-        if dx == 0
-            dx = snake_size
-            dy = 0
-        end
-    end
-
 end
 
 #######
@@ -185,14 +180,50 @@ function build_map()
     HEIGHT = h * 10
 end
 
+#########################
+# Keyboard Interactions #
+#########################
+function on_key_down(g::Game, key)
+    global dx, dy
+    if key == Keys.UP
+        if dy == 0
+            dx = 0
+            dy = -snake_size
+        end
+    end
+
+    if key == Keys.DOWN
+        if dy == 0
+            dx = 0
+            dy = snake_size
+    
+        end
+    end
+
+    if key == Keys.LEFT
+        if dx == 0
+            dx = -snake_size
+            dy = 0
+        end
+    end
+
+    if key == Keys.RIGHT
+        if dx == 0
+            dx = snake_size
+            dy = 0
+        end
+    end
+
+end
+
 
 #################
 # Main function #
 #################
 function main()
     build_map()
-    update_snake_pos!(snake_head, snake_head_lastpos, snakebody, dx, dy)
-    update_snake_length!(snakebody, snake_head_lastpos, snake_size)
+    update_snake_pos!(snake_head, snake_head_lastpos, snake_body, dx, dy)
+    update_snake_length!(snake_body, snake_head_lastpos, snake_size)
 end
 
 main()
