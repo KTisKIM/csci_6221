@@ -59,6 +59,9 @@ function draw()
     for o in obstacles
         draw(o, colorant"black", fill=true)
     end
+
+    # Draw menu bar
+    draw(Rect(0, 0, side_info_bar, HEIGHT), colorant"gray", fill=true)
 end
 
 ##############################################
@@ -77,8 +80,41 @@ end
 
 
 
-function update_snake_length!(snake_body::Queue{Rect}, snake_head_lastpos, snake_size)
-    enqueue!(snake_body, Rect(snake_head_lastpos, (snake_size, snake_size)))
+update_snake_length! = (snake_body::Queue{Rect}, snake_head_lastpos, snake_size) -> 
+                            enqueue!(snake_body, Rect(snake_head_lastpos, (snake_size, snake_size)))
+
+function spawn_apple()
+    """
+    Spawn apple at random position
+    Cannot overlap with snake or obstacles
+    """
+    global apple
+    is_valid_pos = false
+    
+    while !is_valid_pos
+        global x, y
+        x = rand(0:10:WIDTH)
+        y = rand(0:10:HEIGHT)
+
+        for o in obstacles
+            if o.x == x && o.y == y
+                is_valid_pos = false
+            end
+        end
+        for s in snake_body
+            if s.x == x && s.y == y
+                is_valid_pos = false
+            end
+        end
+        if snake_head.x == x && snake_head.y == y
+            is_valid_pos = false
+        end
+
+        is_valid_pos = true
+    end
+
+    apple.x = x
+    apple.y = y
 end
 
 
@@ -93,7 +129,21 @@ function update_snake_pos!(snake_head, snake_head_lastpos, snake_body::Queue{Rec
     snake_head.x += dx
     snake_head.y += dy
     update_snake_length!(snake_body, snake_head_lastpos, snake_size)
-    dequeue!(snake_body)
+
+    # If collide with apple, don't dequeue 
+    #   spawn new apple
+    if collide(snake_head, apple)  
+        play_sound("eat-apple")
+        spawn_apple()
+    else
+        dequeue!(snake_body)
+    end
+    
+    for o in obstacles
+        if collide(snake_head, o)
+            exit()
+        end
+    end
 
     # Check if reach border
     #  if border is reached and no obstacles, 
@@ -113,11 +163,7 @@ function update_snake_pos!(snake_head, snake_head_lastpos, snake_body::Queue{Rec
     end
 
     # Check collision
-    if collide(snake_head, apple)
-        play_sound("ea")
-        # y, fs = wavread("$(@__DIR__)/sounds/ea.wav")
-        # Threads.@spawn wavplay(y, fs)
-    end
+    
 end
 
 
@@ -152,7 +198,7 @@ function build_map()
         if '#' in line
             for (i, c) in enumerate(line)
                 if c == '#'  # Obstacle found
-                    push!(obstacles, Rect((i-1)*10, (h-1)*10, snake_size, snake_size))
+                    push!(obstacles, Rect((i-1)*10 + side_info_bar, (h-1)*10, snake_size, snake_size))
                 end
             end
         end
@@ -160,7 +206,7 @@ function build_map()
         if '\$' in line
             for (i, c) in enumerate(line)
                 if c == '\$'  # Actor found
-                    snake_head.x = (i-1)*10
+                    snake_head.x = (i-1)*10 + side_info_bar
                     snake_head.y = (h-1)*10
                     snake_head_lastpos = (snake_head.x, snake_head.y)
                 end
@@ -170,13 +216,13 @@ function build_map()
         if '@' in line
             for (i, c) in enumerate(line)
                 if c == '@'  # Apple found
-                    apple.x = (i-1)*10
+                    apple.x = (i-1)*10 + side_info_bar
                     apple.y = (h-1)*10
                 end
             end
         end
     end
-    WIDTH = w * 10
+    WIDTH = w * 10 + side_info_bar
     HEIGHT = h * 10
 end
 
