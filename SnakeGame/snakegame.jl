@@ -93,7 +93,7 @@ function spawn_apple()
     
     while !is_valid_pos
         global x, y
-        x = rand(0:10:WIDTH)
+        x = rand(side_info_bar:10:WIDTH)
         y = rand(0:10:HEIGHT)
 
         for o in obstacles
@@ -130,6 +130,24 @@ function update_snake_pos!(snake_head, snake_head_lastpos, snake_body::Queue{Rec
     snake_head.y += dy
     update_snake_length!(snake_body, snake_head_lastpos, snake_size)
 
+    # Check if reach border
+    #  if border is reached and no obstacles, 
+    #  snake head should appear on another end
+    if snake_head.x == WIDTH
+        snake_head.x = 0
+    end
+    if snake_head.x < 0
+        snake_head.x = WIDTH - snake_size
+    end
+    if snake_head.y == HEIGHT
+        snake_head.y = 0
+    end
+
+    if snake_head.y < 0
+        snake_head.y = HEIGHT - snake_size
+    end
+
+    # Check collision
     # If collide with apple, don't dequeue 
     #   spawn new apple
     if collide(snake_head, apple)  
@@ -152,26 +170,6 @@ function update_snake_pos!(snake_head, snake_head_lastpos, snake_body::Queue{Rec
             exit()
         end
     end
-
-    # Check if reach border
-    #  if border is reached and no obstacles, 
-    #  snake head should appear on another end
-    if snake_head.x == WIDTH
-        snake_head.x = 0
-    end
-    if snake_head.x < 0
-        snake_head.x = WIDTH - snake_size
-    end
-    if snake_head.y == HEIGHT
-        snake_head.y = 0
-    end
-
-    if snake_head.y < 0
-        snake_head.y = HEIGHT - snake_size
-    end
-
-    # Check collision
-    
 end
 
 
