@@ -141,6 +141,14 @@ function update_snake_pos!(snake_head, snake_head_lastpos, snake_body::Queue{Rec
     
     for o in obstacles
         if collide(snake_head, o)
+            println("Game Over!")
+            exit()
+        end
+    end
+
+    for s in snake_body
+        if collide(snake_head, s)
+            println("Game Over!")
             exit()
         end
     end
