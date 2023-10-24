@@ -134,9 +134,9 @@ function update_snake_pos!(snake_head, snake_head_lastpos, snake_body::Queue{Rec
     #  if border is reached and no obstacles, 
     #  snake head should appear on another end
     if snake_head.x == WIDTH
-        snake_head.x = 0
+        snake_head.x = side_info_bar
     end
-    if snake_head.x < 0
+    if snake_head.x < side_info_bar
         snake_head.x = WIDTH - snake_size
     end
     if snake_head.y == HEIGHT
