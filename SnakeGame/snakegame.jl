@@ -110,28 +110,32 @@ function spawn_apple()
     
     while !is_valid_pos
         global x, y
-        x = rand(side_bar:10:WIDTH)
-        y = rand(0:10:HEIGHT)
-
+        is_valid_pos = true
+        x = rand(side_bar:10:WIDTH - snake_size)  # Spawn at border will result in invisible apple
+        y = rand(0:10:HEIGHT - snake_size)  # Spawn at border will result in invisible apple
+        
         for o in obstacles
             if o.x == x && o.y == y
                 is_valid_pos = false
+                println("Not valid pos!")
             end
         end
         for s in snake_body
             if s.x == x && s.y == y
                 is_valid_pos = false
+                println("Not valid pos!")
             end
         end
         if snake_head.x == x && snake_head.y == y
             is_valid_pos = false
+            println("Not valid pos!")
         end
-
-        is_valid_pos = true
     end
 
     apple.x = x
     apple.y = y
+    println("WIDTH: $WIDTH, HEIGHT: $HEIGHT")
+    println("New apple pos: $x, $y")
 end
 
 
@@ -216,7 +220,7 @@ function build_map()
     global WIDTH, HEIGHT, obstacles, snake_head, snake_head_lastpos, apple
     file = open("$(@__DIR__)/maps/level1.txt")
     
-    h = 0
+    h = 1
     w = length(readline(file))
     for line in eachline(file)
         w = length(line)
