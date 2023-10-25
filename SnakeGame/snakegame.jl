@@ -1,3 +1,13 @@
+#########################################################
+#########################################################
+#   Team: Team Julia                                    #
+#   Members: Qicheng Chen / JiaHua Hu / Keuntae Kim     #
+#            / Harsha Talapaka / Anh Nguyen             #
+#   Course: CSIC 6221 - 11                              #
+#   Professor: Walt Melo                                #
+#                     < Project >                       #
+#########################################################
+#########################################################
 using DataStructures
 
 ###########
@@ -5,13 +15,13 @@ using DataStructures
 ###########
 WIDTH = 800
 HEIGHT = 600
-side_info_bar = 200
+side_bar = 200
 BACKGROUND = colorant"#B2E684"
 
 #####################################
 # Default info for the Snake(Actor) #
 #####################################
-snake_x = (WIDTH - side_info_bar) / 2 + side_info_bar
+snake_x = (WIDTH - side_bar) / 2 + side_bar
 snake_y = HEIGHT / 2
 snake_color = colorant"black"
 snake_size = 10
@@ -33,8 +43,15 @@ apple = Rect(
     0, 0, snake_size, snake_size
 )
 
-
+##################################
+# Default info for the obstacles #
+##################################
 obstacles = []
+
+#################
+# Side Info Bar #
+#################
+side_info_bar = Rect(0, 0, side_bar, HEIGHT)
 
 ###############
 # Snake moves #
@@ -60,15 +77,15 @@ function draw()
         draw(o, colorant"black", fill=true)
     end
 
-    # Draw menu bar
-    draw(Rect(0, 0, side_info_bar, HEIGHT), colorant"gray", fill=true)
+    # Draw info bar
+    draw(Rect(0, 0, side_bar, HEIGHT), colorant"gray", fill=true)
 end
 
 ##############################################
-# Draw a Menu bar / Status display for users #
+# Draw a info bar / Status display for users #
 ##############################################
 function user_interface(g::Game)
-    # Side Menu Bar
+    # Side Info Bar
     # draw(snake_head, snake_color, fill=true)
     # for s in 1:length(snake_body)
     #     draw(snake_body[s], snake_color, fill=true)
@@ -93,7 +110,7 @@ function spawn_apple()
     
     while !is_valid_pos
         global x, y
-        x = rand(side_info_bar:10:WIDTH)
+        x = rand(side_bar:10:WIDTH)
         y = rand(0:10:HEIGHT)
 
         for o in obstacles
@@ -134,9 +151,9 @@ function update_snake_pos!(snake_head, snake_head_lastpos, snake_body::Queue{Rec
     #  if border is reached and no obstacles, 
     #  snake head should appear on another end
     if snake_head.x == WIDTH
-        snake_head.x = side_info_bar
+        snake_head.x = side_bar
     end
-    if snake_head.x < side_info_bar
+    if snake_head.x < side_bar
         snake_head.x = WIDTH - snake_size
     end
     if snake_head.y == HEIGHT
@@ -208,7 +225,7 @@ function build_map()
         if '#' in line
             for (i, c) in enumerate(line)
                 if c == '#'  # Obstacle found
-                    push!(obstacles, Rect((i-1)*10 + side_info_bar, (h-1)*10, snake_size, snake_size))
+                    push!(obstacles, Rect((i-1)*10 + side_bar, (h-1)*10, snake_size, snake_size))
                 end
             end
         end
@@ -216,7 +233,7 @@ function build_map()
         if '\$' in line
             for (i, c) in enumerate(line)
                 if c == '\$'  # Actor found
-                    snake_head.x = (i-1)*10 + side_info_bar
+                    snake_head.x = (i-1)*10 + side_bar
                     snake_head.y = (h-1)*10
                     snake_head_lastpos = (snake_head.x, snake_head.y)
                 end
@@ -226,13 +243,13 @@ function build_map()
         if '@' in line
             for (i, c) in enumerate(line)
                 if c == '@'  # Apple found
-                    apple.x = (i-1)*10 + side_info_bar
+                    apple.x = (i-1)*10 + side_bar
                     apple.y = (h-1)*10
                 end
             end
         end
     end
-    WIDTH = w * 10 + side_info_bar
+    WIDTH = w * 10 + side_bar
     HEIGHT = h * 10
 end
 
