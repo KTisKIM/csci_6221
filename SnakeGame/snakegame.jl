@@ -43,6 +43,10 @@ apple = Rect(
     0, 0, snake_size, snake_size
 )
 
+apple = Actor("apple")
+apple.pos = (apple_x, apple_y)
+apple.position = Rect(apple.pos, (snake_size, snake_size))
+
 ##################################
 # Default info for the obstacles #
 ##################################
@@ -57,7 +61,7 @@ side_info_bar = Rect(0, 0, side_bar, HEIGHT)
 # Snake moves #
 ###############
 dx = 0
-dy = 10
+dy = snake_size
 
 #########################################
 # Draw actors (Snake, Apple, Obstacles) #
@@ -70,11 +74,13 @@ function draw()
     end
 
     # Apple
-    draw(apple, apple_color, fill=true)
+    # draw(apple, apple_color, fill=true)
+    draw(apple)
 
     # Draw obstacles
     for o in obstacles
-        draw(o, colorant"black", fill=true)
+        # draw(o, colorant"black", fill=true)
+        draw(o)
     end
 
     # Draw info bar
@@ -111,8 +117,8 @@ function spawn_apple()
     while !is_valid_pos
         global x, y
         is_valid_pos = true
-        x = rand(side_bar:10:WIDTH - snake_size)  # Spawn at border will result in invisible apple
-        y = rand(0:10:HEIGHT - snake_size)  # Spawn at border will result in invisible apple
+        x = rand(side_bar:snake_size:WIDTH - snake_size)  # Spawn at border will result in invisible apple
+        y = rand(0:snake_size:HEIGHT - snake_size)  # Spawn at border will result in invisible apple
         
         for o in obstacles
             if o.x == x && o.y == y
@@ -134,8 +140,8 @@ function spawn_apple()
 
     apple.x = x
     apple.y = y
-    println("WIDTH: $WIDTH, HEIGHT: $HEIGHT")
-    println("New apple pos: $x, $y")
+    # println("WIDTH: $WIDTH, HEIGHT: $HEIGHT")
+    # println("New apple pos: $x, $y")
 end
 
 
@@ -229,7 +235,10 @@ function build_map()
         if '#' in line
             for (i, c) in enumerate(line)
                 if c == '#'  # Obstacle found
-                    push!(obstacles, Rect((i-1)*10 + side_bar, (h-1)*10, snake_size, snake_size))
+                    o = Actor("obstacle")
+                    o.pos = ((i-1)*snake_size + side_bar, (h-1)*snake_size)
+                    o.position = Rect(o.pos, (snake_size, snake_size))
+                    push!(obstacles, o)
                 end
             end
         end
@@ -237,8 +246,8 @@ function build_map()
         if '\$' in line
             for (i, c) in enumerate(line)
                 if c == '\$'  # Actor found
-                    snake_head.x = (i-1)*10 + side_bar
-                    snake_head.y = (h-1)*10
+                    snake_head.x = (i-1)*snake_size + side_bar
+                    snake_head.y = (h-1)*snake_size
                     snake_head_lastpos = (snake_head.x, snake_head.y)
                 end
             end
@@ -247,14 +256,14 @@ function build_map()
         if '@' in line
             for (i, c) in enumerate(line)
                 if c == '@'  # Apple found
-                    apple.x = (i-1)*10 + side_bar
-                    apple.y = (h-1)*10
+                    apple.x = (i-1)*snake_size + side_bar
+                    apple.y = (h-1)*snake_size
                 end
             end
         end
     end
-    WIDTH = w * 10 + side_bar
-    HEIGHT = h * 10
+    WIDTH = w * snake_size + side_bar
+    HEIGHT = h * snake_size
 end
 
 #########################
