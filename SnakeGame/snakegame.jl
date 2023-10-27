@@ -3,7 +3,7 @@
 #   Team: Team Julia                                    #
 #   Members: Qicheng Chen / JiaHua Hu / Keuntae Kim     #
 #            / Harsha Talapaka / Anh Nguyen             #
-#   Course: CSIC 6221 - 11                              #
+#   Course: CSCI 6221 - 11                              #
 #   Professor: Walt Melo                                #
 #                     < Project >                       #
 #########################################################
