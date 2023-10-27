@@ -30,22 +30,19 @@ snake_head = Rect(
 )
 
 snake_head_lastpos = (0, 0)
-snake_body = Queue{Rect}()  # Snake vector for storing snake body, first item is snake head
+snake_body = Queue{Rect}()  # Snake vector for storing snake body
 
 ##############################
 # Default info for the apple #
 ##############################
-apple_x = 0     ### TODO
-apple_y = 0     ### TODO
-apple_color = colorant"red"
-apple_size = snake_size
-apple = Rect(
-    0, 0, snake_size, snake_size
-)
+# apple_x = 0
+# apple_y = 0
+# apple_color = colorant"red"
+# apple_size = snake_size
+# apple = Rect(0, 0, snake_size, snake_size)
 
 apple = Actor("apple")
-apple.pos = (apple_x, apple_y)
-apple.position = Rect(apple.pos, (snake_size, snake_size))
+apple.position = Rect((0, 0), (snake_size, snake_size))
 
 ##################################
 # Default info for the obstacles #
@@ -56,6 +53,13 @@ obstacles = []
 # Side Info Bar #
 #################
 side_info_bar = Rect(0, 0, side_bar, HEIGHT)
+
+#################
+# Other Variables #
+#################
+score = 0
+gamepause = false
+gameover = false
 
 ###############
 # Snake moves #
@@ -85,6 +89,42 @@ function draw()
 
     # Draw info bar
     draw(Rect(0, 0, side_bar, HEIGHT), colorant"gray", fill=true)
+
+    if gameover == true
+        gg = TextActor("GAME OVER", "snakegame";
+            font_size = 24, color = [255, 0, 0, 0]
+        )
+        replay = TextActor("Click to Play Again", "snakegame";
+            font_size = 36, color = Int[0, 0, 255, 0]
+        )
+        gg.pos = (10, 30)
+        draw(gg)
+        replay.pos = (((WIDTH - side_bar)/2), HEIGHT/2)
+        draw(replay)
+    end
+    score_label = "Score"
+    score_label_actor = TextActor(score_label, "snakegame";
+        font_size = 20, color = Int[0, 0, 0, 0]
+    )
+    score_val_actor = TextActor(lpad(score, 10, '0'), "snakegame";
+        font_size = 14, color = Int[0, 0, 0, 0]
+    )
+    score_label_actor.pos = (10, 50)
+    score_val_actor.pos = (10, 70)
+    draw(score_label_actor)
+    draw(score_val_actor)
+
+
+    # score Pause message
+    if gamepause == false
+        disp = ""
+    else
+        pause = TextActor("PAUSE","snakegame";
+            font_size = 80, color = Int[0, 0, 204, 255]
+        )
+        pause.pos = (((WIDTH - side_bar)/2), (HEIGHT/2))
+        draw(pause)
+    end
 end
 
 ##############################################
@@ -134,7 +174,7 @@ function spawn_apple()
         end
         if snake_head.x == x && snake_head.y == y
             is_valid_pos = false
-            println("Not valid pos!")
+            # println("Not valid pos!")
         end
     end
 
@@ -152,6 +192,7 @@ function update_snake_pos!(snake_head, snake_head_lastpos, snake_body::Queue{Rec
     * collided with apple, increase snake length and regenerate apple position
     * collided with obstacles, game over
     """
+    global score, gameover
     snake_head_lastpos = (snake_head.x, snake_head.y)
     snake_head.x += dx
     snake_head.y += dy
@@ -180,6 +221,7 @@ function update_snake_pos!(snake_head, snake_head_lastpos, snake_body::Queue{Rec
     if collide(snake_head, apple)  
         play_sound("eat-apple")
         spawn_apple()
+        score += 100
     else
         dequeue!(snake_body)
     end
@@ -187,18 +229,14 @@ function update_snake_pos!(snake_head, snake_head_lastpos, snake_body::Queue{Rec
     for o in obstacles
         if collide(snake_head, o)
             play_sound("collide")
-            println("Game Over!")
-            sleep(0.5)
-            exit()
+            gameover = true
         end
     end
 
     for s in snake_body
         if collide(snake_head, s)
             play_sound("collide")
-            println("Game Over!")
-            sleep(0.5)
-            exit()
+            gameover = true
         end
     end
 end
@@ -208,6 +246,10 @@ function update()
     """
     Game loop
     """
+    if gamepause || gameover
+        return
+    end
+
     update_snake_pos!(snake_head, snake_head_lastpos, snake_body, dx, dy)
     sleep(0.05)
 end
@@ -270,7 +312,7 @@ end
 # Keyboard Interactions #
 #########################
 function on_key_down(g::Game, key)
-    global dx, dy
+    global dx, dy, gamepause
     if key == Keys.UP
         if dy == 0
             dx = 0
@@ -300,6 +342,41 @@ function on_key_down(g::Game, key)
         end
     end
 
+    if key == Keys.ESCAPE
+        gamepause = !gamepause
+    end
+
+end
+
+
+function reset()
+    global WIDTH, HEIGHT, side_bar, score, dx, dy, snake_head, snake_head_lastpos, snake_body, gameover, gamepause
+
+    WIDTH = 800
+    HEIGHT = 600
+    side_bar = 200
+
+    gameover = false
+    gamepause = false
+    score = 0
+    dx = 0
+    dy = 10
+
+    # Reset the snake's position and body
+    snake_head.x = 0
+    snake_head.y = 0
+    snake_head_lastpos = (0, 0)
+    snake_body = Queue{Rect}()
+    apple_x = 0
+    apple_y = 0
+    obstacles = []
+    main()
+end
+
+function on_mouse_down(g::Game)
+    if gameover == true
+        reset()
+    end
 end
 
 
