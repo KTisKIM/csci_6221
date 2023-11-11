@@ -20,10 +20,10 @@ Team Julia in CSCI 6221-11 (Fall 2023 @ The George Washington University)
 - [x] Game over when snake collide with obstacles
 - [x] Increase snake length when collide with apple
 - [x] Regenerate apple when snake collide with apple
-- [ ] Score display
-- [ ] Game over display
+- [x] Score display
+- [x] Game over display
 - [ ] Main menu
   - [ ] Start game button
   - [ ] Exit game button
-- [ ] Game pause and display when press a key
+- [x] Game pause and display when press a key
 - [ ] Display a table of history scores
