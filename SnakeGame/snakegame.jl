@@ -67,6 +67,21 @@ gameover = false
 dx = 0
 dy = snake_size
 
+
+####################################################################################################
+new_game_button1 = Actor("button_new_game1")
+new_game_button1.pos = (30, 200)
+exit_button1 = Actor("button_exit1")
+exit_button1.pos = (30, 300)
+new_game_button2 = Actor("button_new_game2")
+new_game_button2.pos = new_game_button1.pos
+exit_button2 = Actor("button_exit2")
+exit_button2.pos = exit_button1.pos
+
+new_game_button = new_game_button1
+exit_button = exit_button1
+
+
 #########################################
 # Draw actors (Snake, Apple, Obstacles) #
 #########################################
@@ -113,6 +128,10 @@ function draw()
     score_val_actor.pos = (10, 70)
     draw(score_label_actor)
     draw(score_val_actor)
+
+
+    draw(new_game_button)
+    draw(exit_button)
 
 
     # score Pause message
@@ -373,10 +392,32 @@ function reset()
     main()
 end
 
-function on_mouse_down(g::Game)
+function on_mouse_down(g::Game, pos)
+    global new_game_button, exit_button
     if gameover == true
         reset()
     end
+
+    if new_game_button.pos[1] <= pos[1] <= new_game_button.pos[1] + new_game_button.position.w &&
+        new_game_button.pos[2] <= pos[2] <= new_game_button.pos[2] + new_game_button.position.h
+        new_game_button = new_game_button2
+    end
+
+    if exit_button.pos[1] <= pos[1] <= exit_button.pos[1] + exit_button.position.w &&
+        exit_button.pos[2] <= pos[2] <= exit_button.pos[2] + exit_button.position.h
+        exit_button = exit_button2
+    end
+end
+
+function on_mouse_up(g::Game, pos)
+    global new_game_button, exit_button
+    if exit_button.pos[1] <= pos[1] <= exit_button.pos[1] + exit_button.position.w &&
+        exit_button.pos[2] <= pos[2] <= exit_button.pos[2] + exit_button.position.h
+        exit()
+    end
+
+    new_game_button = new_game_button1
+    exit_button = exit_button1
 end
 
 
