@@ -22,8 +22,9 @@ Team Julia in CSCI 6221-11 (Fall 2023 @ The George Washington University)
 - [x] Regenerate apple when snake collide with apple
 - [x] Score display
 - [x] Game over display
-- [ ] Main menu
-  - [ ] Start game button
-  - [ ] Exit game button
+- [x] Main menu
+  - [x] Start game button
+  - [x] Exit game button
+  - [ ] Different difficulty levels and different maps
 - [x] Game pause and display when press a key
 - [ ] Display a table of history scores
