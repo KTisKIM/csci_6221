@@ -60,6 +60,7 @@ side_info_bar = Rect(0, 0, side_bar, HEIGHT)
 score = 0
 gamepause = false
 gameover = false
+gamestart = false
 
 ###############
 # Snake moves #
@@ -68,7 +69,9 @@ dx = 0
 dy = snake_size
 
 
-####################################################################################################
+##########
+# Button #
+##########
 new_game_button1 = Actor("button_new_game1")
 new_game_button1.pos = (30, 200)
 exit_button1 = Actor("button_exit1")
@@ -86,6 +89,9 @@ exit_button = exit_button1
 # Draw actors (Snake, Apple, Obstacles) #
 #########################################
 function draw()
+    """
+    Draw all game objects every frame including snake, apple, obstacles, buttons
+    """
     # Draw Snake
     draw(snake_head, snake_color, fill=true)
     for s in snake_body
@@ -146,24 +152,10 @@ function draw()
     end
 end
 
-##############################################
-# Draw a info bar / Status display for users #
-##############################################
-function user_interface(g::Game)
-    # Side Info Bar
-    # draw(snake_head, snake_color, fill=true)
-    # for s in 1:length(snake_body)
-    #     draw(snake_body[s], snake_color, fill=true)
-    # end
-
-    # Displaying Status
-    # draw(apple, apple_color, fill=true)
-end
-
-
 
 update_snake_length! = (snake_body::Queue{Rect}, snake_head_lastpos, snake_size) -> 
                             enqueue!(snake_body, Rect(snake_head_lastpos, (snake_size, snake_size)))
+
 
 function spawn_apple()
     """
@@ -265,7 +257,7 @@ function update()
     """
     Game loop
     """
-    if gamepause || gameover
+    if gamepause || gameover || !gamestart
         return
     end
 
@@ -325,6 +317,36 @@ function build_map()
     end
     WIDTH = w * snake_size + side_bar
     HEIGHT = h * snake_size
+    update_snake_pos!(snake_head, snake_head_lastpos, snake_body, dx, dy)
+    update_snake_length!(snake_body, snake_head_lastpos, snake_size)
+end
+
+
+function reset()
+    """
+    Reset game objects and rebuild game map
+    """
+    global WIDTH, HEIGHT, side_bar, score, dx, dy, snake_head, snake_head_lastpos, snake_body, gameover, gamepause
+
+    WIDTH = 800
+    HEIGHT = 600
+    side_bar = 200
+
+    gameover = false
+    gamepause = false
+    score = 0
+    dx = 0
+    dy = 10
+
+    # Reset the snake's position and body
+    snake_head.x = 0
+    snake_head.y = 0
+    snake_head_lastpos = (0, 0)
+    snake_body = Queue{Rect}()
+    apple_x = 0
+    apple_y = 0
+    obstacles = []
+    build_map()
 end
 
 #########################
@@ -368,31 +390,13 @@ function on_key_down(g::Game, key)
 end
 
 
-function reset()
-    global WIDTH, HEIGHT, side_bar, score, dx, dy, snake_head, snake_head_lastpos, snake_body, gameover, gamepause
-
-    WIDTH = 800
-    HEIGHT = 600
-    side_bar = 200
-
-    gameover = false
-    gamepause = false
-    score = 0
-    dx = 0
-    dy = 10
-
-    # Reset the snake's position and body
-    snake_head.x = 0
-    snake_head.y = 0
-    snake_head_lastpos = (0, 0)
-    snake_body = Queue{Rect}()
-    apple_x = 0
-    apple_y = 0
-    obstacles = []
-    main()
-end
-
+######################
+# Mouse Interactions #
+######################
 function on_mouse_down(g::Game, pos)
+    """
+    Called when mouse is clicked, change button image to gray
+    """
     global new_game_button, exit_button
     if gameover == true
         reset()
@@ -410,7 +414,17 @@ function on_mouse_down(g::Game, pos)
 end
 
 function on_mouse_up(g::Game, pos)
-    global new_game_button, exit_button
+    """
+    Called when mouse is released, change button image back to original
+    * If cursor is inside new game button, start new game
+    * If cursor is inside exit button, exit game
+    """
+    global new_game_button, exit_button, gamestart
+    if new_game_button.pos[1] <= pos[1] <= new_game_button.pos[1] + new_game_button.position.w &&
+        new_game_button.pos[2] <= pos[2] <= new_game_button.pos[2] + new_game_button.position.h
+        gamestart = true
+        reset()
+    end
     if exit_button.pos[1] <= pos[1] <= exit_button.pos[1] + exit_button.position.w &&
         exit_button.pos[2] <= pos[2] <= exit_button.pos[2] + exit_button.position.h
         exit()
@@ -419,15 +433,3 @@ function on_mouse_up(g::Game, pos)
     new_game_button = new_game_button1
     exit_button = exit_button1
 end
-
-
-#################
-# Main function #
-#################
-function main()
-    build_map()
-    update_snake_pos!(snake_head, snake_head_lastpos, snake_body, dx, dy)
-    update_snake_length!(snake_body, snake_head_lastpos, snake_size)
-end
-
-main()
