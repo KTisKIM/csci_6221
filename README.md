@@ -4,6 +4,9 @@ Team Julia in CSCI 6221-11 (Fall 2023 @ The George Washington University)
   * Julia Programming Language
   * GameZero.jl
 
+# HOW TO RUN
+* (HOW TO RUN)
+
 # BASIC FEATURES
 * 2 Types of Game Mode
   * Infinite Mode (Default)
