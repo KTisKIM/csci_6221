@@ -28,6 +28,6 @@ Team Julia in CSCI 6221-11 (Fall 2023 @ The George Washington University)
 - [x] Main menu
   - [x] Start game button
   - [x] Exit game button
-  - [ ] Different difficulty levels and different maps
+  - [x] Different difficulty levels and different maps
 - [x] Game pause and display when press a key
 - [ ] Display a table of history scores

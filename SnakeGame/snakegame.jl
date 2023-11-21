@@ -72,6 +72,9 @@ dy = snake_size
 ##########
 # Button #
 ##########
+menu_page = 1
+level_num = 1
+
 new_game_button1 = Actor("button_new_game1")
 new_game_button1.pos = (30, 200)
 exit_button1 = Actor("button_exit1")
@@ -81,8 +84,29 @@ new_game_button2.pos = new_game_button1.pos
 exit_button2 = Actor("button_exit2")
 exit_button2.pos = exit_button1.pos
 
+easy_button1 = Actor("button_easy1")
+easy_button1.pos = (30, 200)
+medium_button1 = Actor("button_medium1")
+medium_button1.pos = (30, 250)
+hard_button1 = Actor("button_hard1")
+hard_button1.pos = (30, 300)
+back_button1 = Actor("button_back1")
+back_button1.pos = (30, 350)
+easy_button2 = Actor("button_easy2")
+easy_button2.pos = easy_button1.pos
+medium_button2 = Actor("button_medium2")
+medium_button2.pos = medium_button1.pos
+hard_button2 = Actor("button_hard2")
+hard_button2.pos = hard_button1.pos
+back_button2 = Actor("button_back2")
+back_button2.pos = back_button1.pos
+
 new_game_button = new_game_button1
 exit_button = exit_button1
+easy_button = easy_button1
+medium_button = medium_button1
+hard_button = hard_button1
+back_button = back_button1
 
 
 #########################################
@@ -135,9 +159,16 @@ function draw()
     draw(score_label_actor)
     draw(score_val_actor)
 
-
-    draw(new_game_button)
-    draw(exit_button)
+    # Render buttons
+    if menu_page == 1
+        draw(new_game_button)
+        draw(exit_button)
+    elseif menu_page == 2
+        draw(easy_button)
+        draw(medium_button)
+        draw(hard_button)
+        draw(back_button)
+    end
 
 
     # score Pause message
@@ -174,7 +205,7 @@ function spawn_apple()
         for o in obstacles
             if o.x == x && o.y == y
                 is_valid_pos = false
-                println("Not valid pos!")
+                # println("Not valid pos!")
             end
         end
         for s in snake_body
@@ -277,10 +308,11 @@ function build_map()
     '@' represents Apple initial position
     """
     global WIDTH, HEIGHT, obstacles, snake_head, snake_head_lastpos, apple
-    file = open("$(@__DIR__)/maps/level1.txt")
+    println("$(@__DIR__)/maps/level$level_num.txt")
+    file = open("$(@__DIR__)/maps/level$level_num.txt")
     
-    h = 1
-    w = length(readline(file))
+    h = 0
+    w = 0
     for line in eachline(file)
         w = length(line)
         h += 1
@@ -326,7 +358,7 @@ function reset()
     """
     Reset game objects and rebuild game map
     """
-    global WIDTH, HEIGHT, side_bar, score, dx, dy, snake_head, snake_head_lastpos, snake_body, gameover, gamepause
+    global WIDTH, HEIGHT, side_bar, score, dx, dy, snake_head, snake_head_lastpos, snake_body, gameover, gamepause, obstacles
 
     WIDTH = 800
     HEIGHT = 600
@@ -396,20 +428,45 @@ end
 function on_mouse_down(g::Game, pos)
     """
     Called when mouse is clicked, change button image to gray
+    Mouse down listener only changes button appearance
+    Triggered functions are in mouse up listener
     """
-    global new_game_button, exit_button
+    global new_game_button, exit_button, easy_button, medium_button, hard_button, back_button
     if gameover == true
         reset()
     end
 
-    if new_game_button.pos[1] <= pos[1] <= new_game_button.pos[1] + new_game_button.position.w &&
-        new_game_button.pos[2] <= pos[2] <= new_game_button.pos[2] + new_game_button.position.h
-        new_game_button = new_game_button2
-    end
+    if menu_page == 1
+        if new_game_button.pos[1] <= pos[1] <= new_game_button.pos[1] + new_game_button.position.w &&
+            new_game_button.pos[2] <= pos[2] <= new_game_button.pos[2] + new_game_button.position.h
+            new_game_button = new_game_button2
+        end
 
-    if exit_button.pos[1] <= pos[1] <= exit_button.pos[1] + exit_button.position.w &&
-        exit_button.pos[2] <= pos[2] <= exit_button.pos[2] + exit_button.position.h
-        exit_button = exit_button2
+        if exit_button.pos[1] <= pos[1] <= exit_button.pos[1] + exit_button.position.w &&
+            exit_button.pos[2] <= pos[2] <= exit_button.pos[2] + exit_button.position.h
+            exit_button = exit_button2
+        end
+    elseif menu_page == 2
+
+        if easy_button.pos[1] <= pos[1] <= easy_button.pos[1] + easy_button.position.w &&
+            easy_button.pos[2] <= pos[2] <= easy_button.pos[2] + easy_button.position.h
+            easy_button = easy_button2
+        end
+
+        if medium_button.pos[1] <= pos[1] <= medium_button.pos[1] + medium_button.position.w &&
+            medium_button.pos[2] <= pos[2] <= medium_button.pos[2] + medium_button.position.h
+            medium_button = medium_button2
+        end
+
+        if hard_button.pos[1] <= pos[1] <= hard_button.pos[1] + hard_button.position.w &&
+            hard_button.pos[2] <= pos[2] <= hard_button.pos[2] + hard_button.position.h
+            hard_button = hard_button2
+        end
+
+        if back_button.pos[1] <= pos[1] <= back_button.pos[1] + back_button.position.w &&
+            back_button.pos[2] <= pos[2] <= back_button.pos[2] + back_button.position.h
+            back_button = back_button2
+        end
     end
 end
 
@@ -419,17 +476,54 @@ function on_mouse_up(g::Game, pos)
     * If cursor is inside new game button, start new game
     * If cursor is inside exit button, exit game
     """
-    global new_game_button, exit_button, gamestart
-    if new_game_button.pos[1] <= pos[1] <= new_game_button.pos[1] + new_game_button.position.w &&
-        new_game_button.pos[2] <= pos[2] <= new_game_button.pos[2] + new_game_button.position.h
-        gamestart = true
-        reset()
-    end
-    if exit_button.pos[1] <= pos[1] <= exit_button.pos[1] + exit_button.position.w &&
-        exit_button.pos[2] <= pos[2] <= exit_button.pos[2] + exit_button.position.h
-        exit()
+    global new_game_button, exit_button, gamestart, menu_page, easy_button, medium_button, hard_button, back_button, level_num
+    if menu_page == 1
+        # When new game button is clicked, render easy, medium, hard, back buttons
+        if new_game_button.pos[1] <= pos[1] <= new_game_button.pos[1] + new_game_button.position.w &&
+            new_game_button.pos[2] <= pos[2] <= new_game_button.pos[2] + new_game_button.position.h
+            menu_page = 2
+        end
+
+        if exit_button.pos[1] <= pos[1] <= exit_button.pos[1] + exit_button.position.w &&
+            exit_button.pos[2] <= pos[2] <= exit_button.pos[2] + exit_button.position.h
+            exit()
+        end
+
+        new_game_button = new_game_button1
+        exit_button = exit_button1
+    elseif menu_page == 2
+        if easy_button.pos[1] <= pos[1] <= easy_button.pos[1] + easy_button.position.w &&
+            easy_button.pos[2] <= pos[2] <= easy_button.pos[2] + easy_button.position.h
+            gamestart = true
+            level_num = 1
+            reset()
+        end
+
+        if medium_button.pos[1] <= pos[1] <= medium_button.pos[1] + medium_button.position.w &&
+            medium_button.pos[2] <= pos[2] <= medium_button.pos[2] + medium_button.position.h
+            gamestart = true
+            level_num = 2
+            reset()
+        end
+
+        if hard_button.pos[1] <= pos[1] <= hard_button.pos[1] + hard_button.position.w &&
+            hard_button.pos[2] <= pos[2] <= hard_button.pos[2] + hard_button.position.h
+            gamestart = true
+            level_num = 3
+            reset()
+        end
+
+        if back_button.pos[1] <= pos[1] <= back_button.pos[1] + back_button.position.w &&
+            back_button.pos[2] <= pos[2] <= back_button.pos[2] + back_button.position.h
+            menu_page = 1
+        end
+
+        easy_button = easy_button1
+        medium_button = medium_button1
+        hard_button = hard_button1
+        back_button = back_button1
     end
 
-    new_game_button = new_game_button1
-    exit_button = exit_button1
+    
+    
 end
