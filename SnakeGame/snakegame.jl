@@ -68,45 +68,50 @@ gamestart = false
 dx = 0
 dy = snake_size
 
-
-##########
-# Button #
-##########
+###########
+# Buttons #
+###########
 menu_page = 1
 level_num = 1
 
+# New Game button's images
 new_game_button1 = Actor("button_new_game1")
 new_game_button1.pos = (30, 200)
+new_game_button2 = Actor("button_new_game2") # Clicked
+new_game_button2.pos = new_game_button1.pos
+new_game_button = new_game_button1
+# Exit button's images
 exit_button1 = Actor("button_exit1")
 exit_button1.pos = (30, 300)
-new_game_button2 = Actor("button_new_game2")
-new_game_button2.pos = new_game_button1.pos
-exit_button2 = Actor("button_exit2")
+exit_button2 = Actor("button_exit2") # Clicked
 exit_button2.pos = exit_button1.pos
+exit_button = exit_button1
 
+# Easy difficulty mode button's images
 easy_button1 = Actor("button_easy1")
 easy_button1.pos = (30, 200)
+easy_button2 = Actor("button_easy2") # Clicked
+easy_button2.pos = easy_button1.pos
+easy_button = easy_button1
+# Medium difficulty mode button's images
 medium_button1 = Actor("button_medium1")
 medium_button1.pos = (30, 250)
+medium_button2 = Actor("button_medium2") # Clicked
+medium_button2.pos = medium_button1.pos
+medium_button = medium_button1
+# Hard difficulty mode button's images
 hard_button1 = Actor("button_hard1")
 hard_button1.pos = (30, 300)
+hard_button2 = Actor("button_hard2") # Clicked
+hard_button2.pos = hard_button1.pos
+hard_button = hard_button1
+# Back button's images
 back_button1 = Actor("button_back1")
 back_button1.pos = (30, 350)
-easy_button2 = Actor("button_easy2")
-easy_button2.pos = easy_button1.pos
-medium_button2 = Actor("button_medium2")
-medium_button2.pos = medium_button1.pos
-hard_button2 = Actor("button_hard2")
-hard_button2.pos = hard_button1.pos
-back_button2 = Actor("button_back2")
+back_button2 = Actor("button_back2") # Clicked
 back_button2.pos = back_button1.pos
-
-new_game_button = new_game_button1
-exit_button = exit_button1
-easy_button = easy_button1
-medium_button = medium_button1
-hard_button = hard_button1
 back_button = back_button1
+
 
 
 #########################################
