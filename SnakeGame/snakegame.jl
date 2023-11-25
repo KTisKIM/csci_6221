@@ -114,6 +114,8 @@ back_button = back_button1
 
 
 
+
+
 #########################################
 # Draw actors (Snake, Apple, Obstacles) #
 #########################################
@@ -142,12 +144,13 @@ function draw()
 
     if gameover == true
         gg = TextActor("GAME OVER", "snakegame";
-            font_size = 24, color = [255, 0, 0, 0]
+            font_size = 52, color = [255, 0, 0, 0]
         )
         replay = TextActor("Click to Play Again", "snakegame";
             font_size = 36, color = Int[0, 0, 255, 0]
         )
-        gg.pos = (10, 30)
+        # gg.pos = (10, 30) # In the info bar
+        gg.pos = (((WIDTH - side_bar)/2), (HEIGHT/2) - 50)
         draw(gg)
         replay.pos = (((WIDTH - side_bar)/2), HEIGHT/2)
         draw(replay)
@@ -183,7 +186,7 @@ function draw()
         pause = TextActor("PAUSE","snakegame";
             font_size = 80, color = Int[0, 0, 204, 255]
         )
-        pause.pos = (((WIDTH - side_bar)/2), (HEIGHT/2))
+        pause.pos = (((WIDTH - side_bar)/2 + 30), (HEIGHT/2) - 50)
         draw(pause)
     end
 end
@@ -301,6 +304,8 @@ end
 
 
 
+
+
 #######
 # Map #
 #######
@@ -387,6 +392,8 @@ end
 
 
 
+
+
 #########################
 # Keyboard Interactions #
 #########################
@@ -423,6 +430,7 @@ function on_key_down(g::Game, key)
 
     if key == Keys.ESCAPE
         gamepause = !gamepause
+        play_sound("pause")
     end
 
 end
@@ -537,7 +545,4 @@ function on_mouse_up(g::Game, pos)
         end
         back_button = back_button1
     end
-
-    
-    
 end
