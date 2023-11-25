@@ -53,6 +53,7 @@ obstacles = []
 # Side Info Bar #
 #################
 side_info_bar = Rect(0, 0, side_bar, HEIGHT)
+info_bar_color = colorant"#74806A"
 
 #################
 # Other Variables #
@@ -116,9 +117,9 @@ back_button = back_button1
 
 
 
-#########################################
-# Draw actors (Snake, Apple, Obstacles) #
-#########################################
+####################################
+# Draw actors and display features #
+####################################
 function draw()
     """
     Draw all game objects every frame including snake, apple, obstacles, buttons
@@ -140,7 +141,7 @@ function draw()
     end
 
     # Draw info bar
-    draw(Rect(0, 0, side_bar, HEIGHT), colorant"gray", fill=true)
+    draw(Rect(0, 0, side_bar, HEIGHT), info_bar_color, fill=true)
 
     if gameover == true
         gg = TextActor("GAME OVER", "snakegame";
@@ -155,7 +156,7 @@ function draw()
         replay.pos = (((WIDTH - side_bar)/2), HEIGHT/2)
         draw(replay)
     end
-    score_label = "Score"
+    score_label = "SCORE"
     score_label_actor = TextActor(score_label, "snakegame";
         font_size = 20, color = Int[0, 0, 0, 0]
     )
