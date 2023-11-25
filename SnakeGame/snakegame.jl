@@ -35,11 +35,11 @@ snake_body = Queue{Rect}()  # Snake vector for storing snake body
 ##############################
 # Default info for the apple #
 ##############################
-# apple_x = 0
-# apple_y = 0
-# apple_color = colorant"red"
-# apple_size = snake_size
-# apple = Rect(0, 0, snake_size, snake_size)
+apple_x = 0
+apple_y = 0
+apple_color = colorant"red"
+apple_size = snake_size
+apple = Rect(0, 0, snake_size, snake_size)
 
 apple = Actor("apple")
 apple.position = Rect((0, 0), (snake_size, snake_size))
