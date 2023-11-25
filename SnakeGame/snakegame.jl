@@ -143,19 +143,7 @@ function draw()
     # Draw info bar
     draw(Rect(0, 0, side_bar, HEIGHT), info_bar_color, fill=true)
 
-    if gameover == true
-        gg = TextActor("GAME OVER", "snakegame";
-            font_size = 52, color = [255, 0, 0, 0]
-        )
-        replay = TextActor("Click to Play Again", "snakegame";
-            font_size = 36, color = Int[0, 0, 255, 0]
-        )
-        # gg.pos = (10, 30) # In the info bar
-        gg.pos = (((WIDTH - side_bar)/2), (HEIGHT/2) - 50)
-        draw(gg)
-        replay.pos = (((WIDTH - side_bar)/2), HEIGHT/2)
-        draw(replay)
-    end
+
     score_label = "SCORE"
     score_label_actor = TextActor(score_label, "snakegame";
         font_size = 20, color = Int[0, 0, 0, 0]
@@ -180,7 +168,7 @@ function draw()
     end
 
 
-    # score Pause message
+    # Draw 
     if gamepause == false
         disp = ""
     else
@@ -189,6 +177,21 @@ function draw()
         )
         pause.pos = (((WIDTH - side_bar)/2 + 30), (HEIGHT/2) - 50)
         draw(pause)
+    end
+
+    # Game Over
+    if gameover == true
+        gg = TextActor("GAME OVER", "snakegame";
+            font_size = 52, color = [255, 0, 0, 0]
+        )
+        replay = TextActor("Click to Play Again", "snakegame";
+            font_size = 36, color = Int[0, 0, 255, 0]
+        )
+        # gg.pos = (10, 30) # In the info bar
+        gg.pos = (((WIDTH - side_bar)/2), (HEIGHT/2) - 50)
+        draw(gg)
+        replay.pos = (((WIDTH - side_bar)/2), HEIGHT/2)
+        draw(replay)
     end
 end
 
