@@ -41,8 +41,8 @@ apple_color = colorant"red"
 apple_size = snake_size
 apple = Rect(0, 0, snake_size, snake_size)
 
-apple = Actor("apple")
-apple.position = Rect((0, 0), (snake_size, snake_size))
+# apple = Actor("apple")
+# apple.position = Rect((0, 0), (snake_size, snake_size))
 
 ##################################
 # Default info for the obstacles #
@@ -130,11 +130,11 @@ function draw()
         draw(s, snake_color, fill=true)
     end
 
-    # Apple
-    # draw(apple, apple_color, fill=true)
-    draw(apple)
+    # Draw Apple
+    draw(apple, apple_color, fill=true)
+    # draw(apple)
 
-    # Draw obstacles
+    # Draw Obstacles
     for o in obstacles
         # draw(o, colorant"black", fill=true)
         draw(o)
@@ -143,32 +143,20 @@ function draw()
     # Draw info bar
     draw(Rect(0, 0, side_bar, HEIGHT), info_bar_color, fill=true)
 
-    if gameover == true
-        gg = TextActor("GAME OVER", "snakegame";
-            font_size = 52, color = [255, 0, 0, 0]
-        )
-        replay = TextActor("Click to Play Again", "snakegame";
-            font_size = 36, color = Int[0, 0, 255, 0]
-        )
-        # gg.pos = (10, 30) # In the info bar
-        gg.pos = (((WIDTH - side_bar)/2), (HEIGHT/2) - 50)
-        draw(gg)
-        replay.pos = (((WIDTH - side_bar)/2), HEIGHT/2)
-        draw(replay)
-    end
+    # Draw Score
     score_label = "SCORE"
     score_label_actor = TextActor(score_label, "snakegame";
-        font_size = 20, color = Int[0, 0, 0, 0]
+        font_size = 28, color = Int[0, 0, 0, 0]
     )
-    score_val_actor = TextActor(lpad(score, 10, '0'), "snakegame";
-        font_size = 14, color = Int[0, 0, 0, 0]
+    score_val_actor = TextActor(lpad(score, 0, '0'), "snakegame";
+        font_size = 20, color = Int[0, 0, 0, 0]
     )
     score_label_actor.pos = (10, 50)
     score_val_actor.pos = (10, 70)
     draw(score_label_actor)
     draw(score_val_actor)
 
-    # Render buttons
+    # Draw Buttons
     if menu_page == 1
         draw(new_game_button)
         draw(exit_button)
@@ -177,10 +165,11 @@ function draw()
         draw(medium_button)
         draw(hard_button)
         draw(back_button)
+    elseif menu_page == 3
     end
 
 
-    # score Pause message
+    # Draw Pause text
     if gamepause == false
         disp = ""
     else
@@ -189,6 +178,21 @@ function draw()
         )
         pause.pos = (((WIDTH - side_bar)/2 + 30), (HEIGHT/2) - 50)
         draw(pause)
+    end
+
+    # Game Over
+    if gameover == true
+        gg = TextActor("GAME OVER", "snakegame";
+            font_size = 52, color = [255, 0, 0, 0]
+        )
+        play_again = TextActor("Click to Play Again", "snakegame";
+            font_size = 36, color = Int[0, 0, 255, 0]
+        )
+        # gg.pos = (10, 30) # In the info bar
+        gg.pos = (((WIDTH - side_bar)/2), (HEIGHT/2) - 50)
+        draw(gg)
+        play_again.pos = (((WIDTH - side_bar)/2), HEIGHT/2)
+        draw(play_again)
     end
 end
 
@@ -433,7 +437,6 @@ function on_key_down(g::Game, key)
         gamepause = !gamepause
         play_sound("pause")
     end
-
 end
 
 ######################
