@@ -53,6 +53,7 @@ obstacles = []
 # Side Info Bar #
 #################
 side_info_bar = Rect(0, 0, side_bar, HEIGHT)
+info_bar_color = colorant"#74806A"
 
 #################
 # Other Variables #
@@ -68,50 +69,57 @@ gamestart = false
 dx = 0
 dy = snake_size
 
-
-##########
-# Button #
-##########
+###########
+# Buttons #
+###########
 menu_page = 1
 level_num = 1
 
+# New Game button's images
 new_game_button1 = Actor("button_new_game1")
 new_game_button1.pos = (30, 200)
+new_game_button2 = Actor("button_new_game2") # Clicked
+new_game_button2.pos = new_game_button1.pos
+new_game_button = new_game_button1
+# Exit button's images
 exit_button1 = Actor("button_exit1")
 exit_button1.pos = (30, 300)
-new_game_button2 = Actor("button_new_game2")
-new_game_button2.pos = new_game_button1.pos
-exit_button2 = Actor("button_exit2")
+exit_button2 = Actor("button_exit2") # Clicked
 exit_button2.pos = exit_button1.pos
+exit_button = exit_button1
 
+# Easy difficulty mode button's images
 easy_button1 = Actor("button_easy1")
 easy_button1.pos = (30, 200)
+easy_button2 = Actor("button_easy2") # Clicked
+easy_button2.pos = easy_button1.pos
+easy_button = easy_button1
+# Medium difficulty mode button's images
 medium_button1 = Actor("button_medium1")
 medium_button1.pos = (30, 250)
+medium_button2 = Actor("button_medium2") # Clicked
+medium_button2.pos = medium_button1.pos
+medium_button = medium_button1
+# Hard difficulty mode button's images
 hard_button1 = Actor("button_hard1")
 hard_button1.pos = (30, 300)
+hard_button2 = Actor("button_hard2") # Clicked
+hard_button2.pos = hard_button1.pos
+hard_button = hard_button1
+# Back button's images
 back_button1 = Actor("button_back1")
 back_button1.pos = (30, 350)
-easy_button2 = Actor("button_easy2")
-easy_button2.pos = easy_button1.pos
-medium_button2 = Actor("button_medium2")
-medium_button2.pos = medium_button1.pos
-hard_button2 = Actor("button_hard2")
-hard_button2.pos = hard_button1.pos
-back_button2 = Actor("button_back2")
+back_button2 = Actor("button_back2") # Clicked
 back_button2.pos = back_button1.pos
-
-new_game_button = new_game_button1
-exit_button = exit_button1
-easy_button = easy_button1
-medium_button = medium_button1
-hard_button = hard_button1
 back_button = back_button1
 
 
-#########################################
-# Draw actors (Snake, Apple, Obstacles) #
-#########################################
+
+
+
+####################################
+# Draw actors and display features #
+####################################
 function draw()
     """
     Draw all game objects every frame including snake, apple, obstacles, buttons
@@ -133,21 +141,22 @@ function draw()
     end
 
     # Draw info bar
-    draw(Rect(0, 0, side_bar, HEIGHT), colorant"gray", fill=true)
+    draw(Rect(0, 0, side_bar, HEIGHT), info_bar_color, fill=true)
 
     if gameover == true
         gg = TextActor("GAME OVER", "snakegame";
-            font_size = 24, color = [255, 0, 0, 0]
+            font_size = 52, color = [255, 0, 0, 0]
         )
         replay = TextActor("Click to Play Again", "snakegame";
             font_size = 36, color = Int[0, 0, 255, 0]
         )
-        gg.pos = (10, 30)
+        # gg.pos = (10, 30) # In the info bar
+        gg.pos = (((WIDTH - side_bar)/2), (HEIGHT/2) - 50)
         draw(gg)
         replay.pos = (((WIDTH - side_bar)/2), HEIGHT/2)
         draw(replay)
     end
-    score_label = "Score"
+    score_label = "SCORE"
     score_label_actor = TextActor(score_label, "snakegame";
         font_size = 20, color = Int[0, 0, 0, 0]
     )
@@ -178,7 +187,7 @@ function draw()
         pause = TextActor("PAUSE","snakegame";
             font_size = 80, color = Int[0, 0, 204, 255]
         )
-        pause.pos = (((WIDTH - side_bar)/2), (HEIGHT/2))
+        pause.pos = (((WIDTH - side_bar)/2 + 30), (HEIGHT/2) - 50)
         draw(pause)
     end
 end
@@ -225,7 +234,6 @@ function spawn_apple()
     # println("WIDTH: $WIDTH, HEIGHT: $HEIGHT")
     # println("New apple pos: $x, $y")
 end
-
 
 function update_snake_pos!(snake_head, snake_head_lastpos, snake_body::Queue{Rect}, dx, dy)
     """
@@ -283,7 +291,6 @@ function update_snake_pos!(snake_head, snake_head_lastpos, snake_body::Queue{Rec
     end
 end
 
-
 function update()
     """
     Game loop
@@ -295,6 +302,10 @@ function update()
     update_snake_pos!(snake_head, snake_head_lastpos, snake_body, dx, dy)
     sleep(0.05)
 end
+
+
+
+
 
 #######
 # Map #
@@ -353,7 +364,6 @@ function build_map()
     update_snake_length!(snake_body, snake_head_lastpos, snake_size)
 end
 
-
 function reset()
     """
     Reset game objects and rebuild game map
@@ -380,6 +390,10 @@ function reset()
     obstacles = []
     build_map()
 end
+
+
+
+
 
 #########################
 # Keyboard Interactions #
@@ -417,10 +431,10 @@ function on_key_down(g::Game, key)
 
     if key == Keys.ESCAPE
         gamepause = !gamepause
+        play_sound("pause")
     end
 
 end
-
 
 ######################
 # Mouse Interactions #
@@ -437,32 +451,37 @@ function on_mouse_down(g::Game, pos)
     end
 
     if menu_page == 1
+        # New Game button
         if new_game_button.pos[1] <= pos[1] <= new_game_button.pos[1] + new_game_button.position.w &&
             new_game_button.pos[2] <= pos[2] <= new_game_button.pos[2] + new_game_button.position.h
             new_game_button = new_game_button2
         end
 
+        # Exit button
         if exit_button.pos[1] <= pos[1] <= exit_button.pos[1] + exit_button.position.w &&
             exit_button.pos[2] <= pos[2] <= exit_button.pos[2] + exit_button.position.h
             exit_button = exit_button2
         end
     elseif menu_page == 2
-
+        # Easy difficulty mode button
         if easy_button.pos[1] <= pos[1] <= easy_button.pos[1] + easy_button.position.w &&
             easy_button.pos[2] <= pos[2] <= easy_button.pos[2] + easy_button.position.h
             easy_button = easy_button2
         end
 
+        # Medium difficulty mode button
         if medium_button.pos[1] <= pos[1] <= medium_button.pos[1] + medium_button.position.w &&
             medium_button.pos[2] <= pos[2] <= medium_button.pos[2] + medium_button.position.h
             medium_button = medium_button2
         end
 
+        # Hard difficulty mode button
         if hard_button.pos[1] <= pos[1] <= hard_button.pos[1] + hard_button.position.w &&
             hard_button.pos[2] <= pos[2] <= hard_button.pos[2] + hard_button.position.h
             hard_button = hard_button2
         end
 
+        # Back button
         if back_button.pos[1] <= pos[1] <= back_button.pos[1] + back_button.position.w &&
             back_button.pos[2] <= pos[2] <= back_button.pos[2] + back_button.position.h
             back_button = back_button2
@@ -478,52 +497,53 @@ function on_mouse_up(g::Game, pos)
     """
     global new_game_button, exit_button, gamestart, menu_page, easy_button, medium_button, hard_button, back_button, level_num
     if menu_page == 1
+        # New Game button
         # When new game button is clicked, render easy, medium, hard, back buttons
         if new_game_button.pos[1] <= pos[1] <= new_game_button.pos[1] + new_game_button.position.w &&
             new_game_button.pos[2] <= pos[2] <= new_game_button.pos[2] + new_game_button.position.h
             menu_page = 2
         end
+        new_game_button = new_game_button1
 
+        # Exit button
         if exit_button.pos[1] <= pos[1] <= exit_button.pos[1] + exit_button.position.w &&
             exit_button.pos[2] <= pos[2] <= exit_button.pos[2] + exit_button.position.h
             exit()
         end
-
-        new_game_button = new_game_button1
         exit_button = exit_button1
     elseif menu_page == 2
+        # Easy difficulty mode button
         if easy_button.pos[1] <= pos[1] <= easy_button.pos[1] + easy_button.position.w &&
             easy_button.pos[2] <= pos[2] <= easy_button.pos[2] + easy_button.position.h
             gamestart = true
             level_num = 1
             reset()
         end
+        easy_button = easy_button1
 
+        # Medium difficulty mode button
         if medium_button.pos[1] <= pos[1] <= medium_button.pos[1] + medium_button.position.w &&
             medium_button.pos[2] <= pos[2] <= medium_button.pos[2] + medium_button.position.h
             gamestart = true
             level_num = 2
             reset()
         end
+        medium_button = medium_button1
 
+        # Hard difficulty mode button
         if hard_button.pos[1] <= pos[1] <= hard_button.pos[1] + hard_button.position.w &&
             hard_button.pos[2] <= pos[2] <= hard_button.pos[2] + hard_button.position.h
             gamestart = true
             level_num = 3
             reset()
         end
+        hard_button = hard_button1
 
+        # Back button
         if back_button.pos[1] <= pos[1] <= back_button.pos[1] + back_button.position.w &&
             back_button.pos[2] <= pos[2] <= back_button.pos[2] + back_button.position.h
             menu_page = 1
         end
-
-        easy_button = easy_button1
-        medium_button = medium_button1
-        hard_button = hard_button1
         back_button = back_button1
     end
-
-    
-    
 end
