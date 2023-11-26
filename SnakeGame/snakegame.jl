@@ -161,6 +161,7 @@ function draw()
         draw(new_game_button)
         draw(exit_button)
     elseif menu_page == 2
+        # draw(infinite_mode)
         draw(easy_button)
         draw(medium_button)
         draw(hard_button)
