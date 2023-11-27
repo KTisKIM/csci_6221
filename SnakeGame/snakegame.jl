@@ -128,11 +128,11 @@ back_button2.pos = back_button1.pos
 back_button = back_button1
 
 # Try Again button's images (In-game)
-try_again_button1 = Actor("button_new_game1") # TODO
+try_again_button1 = Actor("button_try_again1")
 try_again_button1.pos = (30, 200)
-try_again_button2 = Actor("button_new_game2") # Clicked # TODO
-try_again_button2.pos = new_game_button1.pos
-try_again_button = new_game_button1
+try_again_button2 = Actor("button_try_again2") # Clicked
+try_again_button2.pos = try_again_button1.pos
+try_again_button = try_again_button1
 # Back button's images (In-game)
 back2_button1 = Actor("button_back1")
 back2_button1.pos = (30, 300)
@@ -179,10 +179,10 @@ function draw()
     # Draw Score
     score_label = "SCORE"
     score_label_actor = TextActor(score_label, "snakegame";
-        font_size = 28, color = Int[0, 0, 0, 0]
+        font_size = 26, color = Int[60, 60, 60, 0]
     )
     score_val_actor = TextActor(lpad(score, 0, '0'), "snakegame";
-        font_size = 20, color = Int[0, 0, 0, 0]
+        font_size = 20, color = Int[40, 40, 40, 0]
     )
     score_label_actor.pos = (10, 50)
     score_val_actor.pos = (10, 70)
@@ -225,13 +225,13 @@ function draw()
         gg = TextActor("GAME OVER", "snakegame";
             font_size = 52, color = [255, 0, 0, 0]
         )
-        play_again = TextActor("Click to Play Again", "snakegame";
-            font_size = 36, color = Int[0, 0, 255, 0]
+        play_again = TextActor("Click <Try Again> to Play Again", "snakegame";
+            font_size = 28, color = Int[0, 0, 255, 0]
         )
         # gg.pos = (10, 30) # In the info bar
         gg.pos = (((WIDTH - side_bar)/2), (HEIGHT/2) - 50)
         draw(gg)
-        play_again.pos = (((WIDTH - side_bar)/2), HEIGHT/2)
+        play_again.pos = (((WIDTH - side_bar)/2) - 60, HEIGHT/2)
         draw(play_again)
     end
 end
@@ -485,7 +485,7 @@ function on_mouse_down(g::Game, pos)
     Triggered functions are in mouse up listener
     """
     global new_game_button, exit_button, classic_mode_button, difficulty_mode_button, easy_button, intermediate_button,
-            hard_button, back_button, back2_button, exit2_button
+            hard_button, back_button, try_again_button, back2_button, exit2_button
 
     # if gameover == true # TODO
     #     reset()
@@ -565,7 +565,7 @@ function on_mouse_up(g::Game, pos)
     * If cursor is inside exit button, exit game
     """
     global new_game_button, exit_button, gamestart, menu_page, classic_mode_button, difficulty_mode_button,
-            easy_button, intermediate_button, hard_button, back_button, level_num, back2_button, exit2_button
+            easy_button, intermediate_button, hard_button, back_button, level_num, try_again_button, back2_button, exit2_button
     if menu_page == 1
         # New Game button // When new game button is clicked, render classic mode, difficulty mode, back buttons
         if new_game_button.pos[1] <= pos[1] <= new_game_button.pos[1] + new_game_button.position.w &&
