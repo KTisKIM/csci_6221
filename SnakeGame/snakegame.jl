@@ -127,12 +127,24 @@ back_button2 = Actor("button_back2") # Clicked
 back_button2.pos = back_button1.pos
 back_button = back_button1
 
-# Try Again button's images
+# Try Again button's images (In-game)
 try_again_button1 = Actor("button_new_game1") # TODO
 try_again_button1.pos = (30, 200)
 try_again_button2 = Actor("button_new_game2") # Clicked # TODO
 try_again_button2.pos = new_game_button1.pos
 try_again_button = new_game_button1
+# Back button's images (In-game)
+back2_button1 = Actor("button_back1")
+back2_button1.pos = (30, 300)
+back2_button2 = Actor("button_back2") # Clicked
+back2_button2.pos = back2_button1.pos
+back2_button = back2_button1
+# Exit button's images (In-game)
+exit2_button1 = Actor("button_exit1")
+exit2_button1.pos = (30, 350)
+exit2_button2 = Actor("button_exit2") # Clicked
+exit2_button2.pos = exit2_button1.pos
+exit2_button = exit2_button1
 
 
 
@@ -192,7 +204,8 @@ function draw()
         draw(back_button)
     elseif menu_page == 4 # In-game menu
         draw(try_again_button)
-        draw(exit_button)
+        draw(back2_button)
+        draw(exit2_button)
     end
 
 
@@ -472,11 +485,11 @@ function on_mouse_down(g::Game, pos)
     Triggered functions are in mouse up listener
     """
     global new_game_button, exit_button, classic_mode_button, difficulty_mode_button, easy_button, intermediate_button,
-            hard_button, back_button
+            hard_button, back_button, back2_button, exit2_button
 
-    if gameover == true # TODO
-        reset()
-    end
+    # if gameover == true # TODO
+    #     reset()
+    # end
 
     if menu_page == 1
         # New Game button
@@ -526,8 +539,22 @@ function on_mouse_down(g::Game, pos)
             back_button.pos[2] <= pos[2] <= back_button.pos[2] + back_button.position.h
             back_button = back_button2
         end
-    elseif menu_page == 4 # In-game menu
-        # TODO
+    elseif menu_page == 4 # In-game menu # TODO
+        # Try again button
+        if try_again_button.pos[1] <= pos[1] <= try_again_button.pos[1] + try_again_button.position.w &&
+            try_again_button.pos[2] <= pos[2] <= try_again_button.pos[2] + try_again_button.position.h
+            try_again_button = try_again_button2
+        end
+        # Back button
+        if back2_button.pos[1] <= pos[1] <= back2_button.pos[1] + back2_button.position.w &&
+            back2_button.pos[2] <= pos[2] <= back2_button.pos[2] + back2_button.position.h
+            back2_button = back2_button2
+        end
+        # Exit button
+        if exit2_button.pos[1] <= pos[1] <= exit2_button.pos[1] + exit2_button.position.w &&
+            exit2_button.pos[2] <= pos[2] <= exit2_button.pos[2] + exit2_button.position.h
+            exit2_button = exit2_button2
+        end
     end
 end
 
@@ -538,7 +565,7 @@ function on_mouse_up(g::Game, pos)
     * If cursor is inside exit button, exit game
     """
     global new_game_button, exit_button, gamestart, menu_page, classic_mode_button, difficulty_mode_button,
-            easy_button, intermediate_button, hard_button, back_button, level_num
+            easy_button, intermediate_button, hard_button, back_button, level_num, back2_button, exit2_button
     if menu_page == 1
         # New Game button // When new game button is clicked, render classic mode, difficulty mode, back buttons
         if new_game_button.pos[1] <= pos[1] <= new_game_button.pos[1] + new_game_button.position.w &&
@@ -559,6 +586,7 @@ function on_mouse_up(g::Game, pos)
             gamestart = true
             level_num = "infinity"
             reset()
+            menu_page = 4
         end
         classic_mode_button = classic_mode_button1
         # When difficulty mode button is clicked, render easy, intermediate, hard, back buttons
@@ -580,6 +608,7 @@ function on_mouse_up(g::Game, pos)
             gamestart = true
             level_num = 1
             reset()
+            menu_page = 4
         end
         easy_button = easy_button1
         # intermediate difficulty mode button
@@ -588,6 +617,7 @@ function on_mouse_up(g::Game, pos)
             gamestart = true
             level_num = 2
             reset()
+            menu_page = 4
         end
         intermediate_button = intermediate_button1
         # Hard difficulty mode button
@@ -596,6 +626,7 @@ function on_mouse_up(g::Game, pos)
             gamestart = true
             level_num = 3
             reset()
+            menu_page = 4
         end
         hard_button = hard_button1
         # Back button
@@ -604,7 +635,24 @@ function on_mouse_up(g::Game, pos)
             menu_page = 2
         end
         back_button = back_button1
-    elseif menu_page == 4 # In-game menu
-        # TODO
+    elseif menu_page == 4 # In-game menu # TODO
+        # Try again button // When new game button is clicked, the game starts again from the beginning.
+        if try_again_button.pos[1] <= pos[1] <= try_again_button.pos[1] + try_again_button.position.w &&
+            try_again_button.pos[2] <= pos[2] <= try_again_button.pos[2] + try_again_button.position.h
+            reset()
+        end
+        try_again_button = try_again_button1
+        # Back button
+        if back2_button.pos[1] <= pos[1] <= back2_button.pos[1] + back2_button.position.w &&
+            back2_button.pos[2] <= pos[2] <= back2_button.pos[2] + back2_button.position.h
+            menu_page = 2
+        end
+        back2_button = back2_button1
+        # Exit button
+        if exit2_button.pos[1] <= pos[1] <= exit2_button.pos[1] + exit2_button.position.w &&
+            exit2_button.pos[2] <= pos[2] <= exit2_button.pos[2] + exit2_button.position.h
+            exit()
+        end
+        exit2_button = exit2_button1
     end
 end
