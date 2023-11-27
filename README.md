@@ -5,7 +5,10 @@ Team Julia in CSCI 6221-11 (Fall 2023 @ The George Washington University)
   * GameZero.jl
 
 # HOW TO RUN
-* (HOW TO RUN)
+* Install GameZero and DataStructures in your Julia programming language.
+* In Julia IDE, type
+  > `using GameZero` \
+  > `rungame("SnakeGame/snakegame.jl")`
 
 # BASIC FEATURES
 * 2 Types of Game Mode
@@ -30,4 +33,3 @@ Team Julia in CSCI 6221-11 (Fall 2023 @ The George Washington University)
   - [x] Exit game button
   - [x] Different difficulty levels and different maps
 - [x] Game pause and display when press a key
-- [ ] Display a table of history scores
