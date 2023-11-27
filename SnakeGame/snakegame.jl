@@ -96,7 +96,7 @@ classic_mode_button2.pos = classic_mode_button1.pos
 classic_mode_button = classic_mode_button1
 # Difficulty mode button's images
 difficulty_mode_button1 = Actor("button_difficulty_mode1")
-difficulty_mode_button1.pos = (30, 200)
+difficulty_mode_button1.pos = (30, 250)
 difficulty_mode_button2 = Actor("button_difficulty_mode2") # Clicked
 difficulty_mode_button2.pos = difficulty_mode_button1.pos
 difficulty_mode_button = difficulty_mode_button1
