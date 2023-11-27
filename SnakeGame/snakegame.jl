@@ -76,17 +76,30 @@ menu_page = 1
 level_num = 1
 
 # New Game button's images
-difficulty_mode_button1 = Actor("button_difficulty_mode1")
-difficulty_mode_button1.pos = (30, 200)
-difficulty_mode_button2 = Actor("button_difficulty_mode2") # Clicked
-difficulty_mode_button2.pos = difficulty_mode_button1.pos
-difficulty_mode_button = difficulty_mode_button1
+new_game_button1 = Actor("button_new_game1")
+new_game_button1.pos = (30, 200)
+new_game_button2 = Actor("button_new_game2") # Clicked
+new_game_button2.pos = new_game_button1.pos
+new_game_button = new_game_button1
 # Exit button's images
 exit_button1 = Actor("button_exit1")
 exit_button1.pos = (30, 300)
 exit_button2 = Actor("button_exit2") # Clicked
 exit_button2.pos = exit_button1.pos
 exit_button = exit_button1
+
+# Classic mode(Infinite mode) button's images
+classic_mode_button1 = Actor("button_classic_mode1")
+classic_mode_button1.pos = (30, 200)
+classic_mode_button2 = Actor("button_classic_mode2") # Clicked
+classic_mode_button2.pos = classic_mode_button1.pos
+classic_mode_button = classic_mode_button1
+# Difficulty mode button's images
+difficulty_mode_button1 = Actor("button_difficulty_mode1")
+difficulty_mode_button1.pos = (30, 200)
+difficulty_mode_button2 = Actor("button_difficulty_mode2") # Clicked
+difficulty_mode_button2.pos = difficulty_mode_button1.pos
+difficulty_mode_button = difficulty_mode_button1
 
 # Easy difficulty mode button's images
 easy_button1 = Actor("button_easy1")
@@ -158,15 +171,18 @@ function draw()
 
     # Draw Buttons
     if menu_page == 1
-        draw(difficulty_mode_button)
+        draw(new_game_button)
         draw(exit_button)
     elseif menu_page == 2
-        # draw(infinite_mode)
+        draw(classic_mode_button)
+        draw(difficulty_mode_button)
+        draw(back_button)
+    elseif menu_page == 3
         draw(easy_button)
         draw(intermediate_button)
         draw(hard_button)
         draw(back_button)
-    elseif menu_page == 3
+    elseif menu_page == 4
     end
 
 
@@ -324,8 +340,8 @@ function build_map()
     '@' represents Apple initial position
     """
     global WIDTH, HEIGHT, obstacles, snake_head, snake_head_lastpos, apple
-    println("$(@__DIR__)/maps/level$level_num.txt")
-    file = open("$(@__DIR__)/maps/level$level_num.txt")
+    println("$(@__DIR__)/maps/level_$level_num.txt")
+    file = open("$(@__DIR__)/maps/level_$level_num.txt")
     
     h = 0
     w = 0
@@ -405,36 +421,32 @@ end
 #########################
 function on_key_down(g::Game, key)
     global dx, dy, gamepause
-    if key == Keys.UP
+    if key == Keys.UP # Upper Arrow Key
         if dy == 0
             dx = 0
             dy = -snake_size
         end
     end
-
-    if key == Keys.DOWN
+    if key == Keys.DOWN # Down Arrow Key
         if dy == 0
             dx = 0
             dy = snake_size
     
         end
     end
-
-    if key == Keys.LEFT
+    if key == Keys.LEFT # Left Arrow Key
         if dx == 0
             dx = -snake_size
             dy = 0
         end
     end
-
-    if key == Keys.RIGHT
+    if key == Keys.RIGHT # Right Arrow Key
         if dx == 0
             dx = snake_size
             dy = 0
         end
     end
-
-    if key == Keys.ESCAPE
+    if key == Keys.ESCAPE # ESC Key
         gamepause = !gamepause
         play_sound("pause")
     end
@@ -449,42 +461,55 @@ function on_mouse_down(g::Game, pos)
     Mouse down listener only changes button appearance
     Triggered functions are in mouse up listener
     """
-    global difficulty_mode_button, exit_button, easy_button, intermediate_button, hard_button, back_button
+    global new_game_button, exit_button, classic_mode_button, difficulty_mode_button, easy_button, intermediate_button,
+            hard_button, back_button
     if gameover == true
         reset()
     end
 
     if menu_page == 1
         # New Game button
-        if difficulty_mode_button.pos[1] <= pos[1] <= difficulty_mode_button.pos[1] + difficulty_mode_button.position.w &&
-            difficulty_mode_button.pos[2] <= pos[2] <= difficulty_mode_button.pos[2] + difficulty_mode_button.position.h
-            difficulty_mode_button = difficulty_mode_button2
+        if new_game_button.pos[1] <= pos[1] <= new_game_button.pos[1] + new_game_button.position.w &&
+            new_game_button.pos[2] <= pos[2] <= new_game_button.pos[2] + new_game_button.position.h
+            new_game_button = new_game_button2
         end
-
         # Exit button
         if exit_button.pos[1] <= pos[1] <= exit_button.pos[1] + exit_button.position.w &&
             exit_button.pos[2] <= pos[2] <= exit_button.pos[2] + exit_button.position.h
             exit_button = exit_button2
         end
     elseif menu_page == 2
+        # Classic mode button
+        if classic_mode_button.pos[1] <= pos[1] <= classic_mode_button.pos[1] + classic_mode_button.position.w &&
+            classic_mode_button.pos[2] <= pos[2] <= classic_mode_button.pos[2] + classic_mode_button.position.h
+            classic_mode_button = classic_mode_button2
+        end
+        # Difficulty mode button
+        if difficulty_mode_button.pos[1] <= pos[1] <= difficulty_mode_button.pos[1] + difficulty_mode_button.position.w &&
+            difficulty_mode_button.pos[2] <= pos[2] <= difficulty_mode_button.pos[2] + difficulty_mode_button.position.h
+            difficulty_mode_button = difficulty_mode_button2
+        end
+        # Back button
+        if back_button.pos[1] <= pos[1] <= back_button.pos[1] + back_button.position.w &&
+            back_button.pos[2] <= pos[2] <= back_button.pos[2] + back_button.position.h
+            back_button = back_button2
+        end
+    elseif menu_page == 3
         # Easy difficulty mode button
         if easy_button.pos[1] <= pos[1] <= easy_button.pos[1] + easy_button.position.w &&
             easy_button.pos[2] <= pos[2] <= easy_button.pos[2] + easy_button.position.h
             easy_button = easy_button2
         end
-
         # intermediate difficulty mode button
         if intermediate_button.pos[1] <= pos[1] <= intermediate_button.pos[1] + intermediate_button.position.w &&
             intermediate_button.pos[2] <= pos[2] <= intermediate_button.pos[2] + intermediate_button.position.h
             intermediate_button = intermediate_button2
         end
-
         # Hard difficulty mode button
         if hard_button.pos[1] <= pos[1] <= hard_button.pos[1] + hard_button.position.w &&
             hard_button.pos[2] <= pos[2] <= hard_button.pos[2] + hard_button.position.h
             hard_button = hard_button2
         end
-
         # Back button
         if back_button.pos[1] <= pos[1] <= back_button.pos[1] + back_button.position.w &&
             back_button.pos[2] <= pos[2] <= back_button.pos[2] + back_button.position.h
@@ -499,16 +524,15 @@ function on_mouse_up(g::Game, pos)
     * If cursor is inside new game button, start new game
     * If cursor is inside exit button, exit game
     """
-    global difficulty_mode_button, exit_button, gamestart, menu_page, easy_button, intermediate_button, hard_button, back_button, level_num
+    global new_game_button, exit_button, gamestart, menu_page, classic_mode_button, difficulty_mode_button,
+            easy_button, intermediate_button, hard_button, back_button, level_num
     if menu_page == 1
-        # New Game button
-        # When new game button is clicked, render easy, intermediate, hard, back buttons
-        if difficulty_mode_button.pos[1] <= pos[1] <= difficulty_mode_button.pos[1] + difficulty_mode_button.position.w &&
-            difficulty_mode_button.pos[2] <= pos[2] <= difficulty_mode_button.pos[2] + difficulty_mode_button.position.h
+        # New Game button // When new game button is clicked, render classic mode, difficulty mode, back buttons
+        if new_game_button.pos[1] <= pos[1] <= new_game_button.pos[1] + new_game_button.position.w &&
+            new_game_button.pos[2] <= pos[2] <= new_game_button.pos[2] + new_game_button.position.h
             menu_page = 2
         end
-        difficulty_mode_button = difficulty_mode_button1
-
+        new_game_button = new_game_button1
         # Exit button
         if exit_button.pos[1] <= pos[1] <= exit_button.pos[1] + exit_button.position.w &&
             exit_button.pos[2] <= pos[2] <= exit_button.pos[2] + exit_button.position.h
@@ -516,6 +540,27 @@ function on_mouse_up(g::Game, pos)
         end
         exit_button = exit_button1
     elseif menu_page == 2
+        # Classic mode button
+        if classic_mode_button.pos[1] <= pos[1] <= classic_mode_button.pos[1] + classic_mode_button.position.w &&
+            classic_mode_button.pos[2] <= pos[2] <= classic_mode_button.pos[2] + classic_mode_button.position.h
+            gamestart = true
+            level_num = "infinity"
+            reset()
+        end
+        classic_mode_button = classic_mode_button1
+        # When difficulty mode button is clicked, render easy, intermediate, hard, back buttons
+        if difficulty_mode_button.pos[1] <= pos[1] <= difficulty_mode_button.pos[1] + difficulty_mode_button.position.w &&
+            difficulty_mode_button.pos[2] <= pos[2] <= difficulty_mode_button.pos[2] + difficulty_mode_button.position.h
+            menu_page = 3
+        end
+        difficulty_mode_button = difficulty_mode_button1
+        # Back button
+        if back_button.pos[1] <= pos[1] <= back_button.pos[1] + back_button.position.w &&
+            back_button.pos[2] <= pos[2] <= back_button.pos[2] + back_button.position.h
+            menu_page = 1
+        end
+        back_button = back_button1
+    elseif menu_page == 3
         # Easy difficulty mode button
         if easy_button.pos[1] <= pos[1] <= easy_button.pos[1] + easy_button.position.w &&
             easy_button.pos[2] <= pos[2] <= easy_button.pos[2] + easy_button.position.h
@@ -524,7 +569,6 @@ function on_mouse_up(g::Game, pos)
             reset()
         end
         easy_button = easy_button1
-
         # intermediate difficulty mode button
         if intermediate_button.pos[1] <= pos[1] <= intermediate_button.pos[1] + intermediate_button.position.w &&
             intermediate_button.pos[2] <= pos[2] <= intermediate_button.pos[2] + intermediate_button.position.h
@@ -533,7 +577,6 @@ function on_mouse_up(g::Game, pos)
             reset()
         end
         intermediate_button = intermediate_button1
-
         # Hard difficulty mode button
         if hard_button.pos[1] <= pos[1] <= hard_button.pos[1] + hard_button.position.w &&
             hard_button.pos[2] <= pos[2] <= hard_button.pos[2] + hard_button.position.h
@@ -542,11 +585,10 @@ function on_mouse_up(g::Game, pos)
             reset()
         end
         hard_button = hard_button1
-
         # Back button
         if back_button.pos[1] <= pos[1] <= back_button.pos[1] + back_button.position.w &&
             back_button.pos[2] <= pos[2] <= back_button.pos[2] + back_button.position.h
-            menu_page = 1
+            menu_page = 2
         end
         back_button = back_button1
     end
