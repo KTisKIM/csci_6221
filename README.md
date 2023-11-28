@@ -19,11 +19,9 @@ Team Julia in CSCI 6221-11 (Fall 2023 @ The George Washington University)
 * 2 Types of Game Mode
   * Classic Mode (Infinite mode without any obstacles)
     * Can keep playing the game until the actor(Snake) dies.
-    * The actor(Snake)'s movement speed will gets faster as it eats apples.
   * Difficulty Mode
     * User can choose the difficulty levels of the game.
     * It will include different maps based on the chosen difficulty.
-    * The actor(Snake) will have different movement speeds based on the chosen difficulty.
 
 # TO-DO
 - [x] Need to display the side menu bar and the game display at the same time.
