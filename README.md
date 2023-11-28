@@ -6,9 +6,12 @@ Team Julia in CSCI 6221-11 (Fall 2023 @ The George Washington University)
 
 # HOW TO RUN
 * Install `GameZero` and `DataStructures` in your Julia programming language.
-* In Julia IDE, type
+* In terminal, type
+  ```julia runsnake.jl```
+* Or in Julia IDE, type
   > `using GameZero` \
   > `rungame("SnakeGame/snakegame.jl")`
+
 
 # HOW TO PLAY
 * Arrow keys(Up, Down, Left, Right) to move the actor(Snake).
