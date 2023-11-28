@@ -444,34 +444,36 @@ end
 #########################
 function on_key_down(g::Game, key)
     global dx, dy, gamepause
-    if key == Keys.UP # Upper Arrow Key
-        if dy == 0
-            dx = 0
-            dy = -snake_size
+    if !gameover && gamestart
+        if key == Keys.UP # Upper Arrow Key
+            if dy == 0
+                dx = 0
+                dy = -snake_size
+            end
         end
-    end
-    if key == Keys.DOWN # Down Arrow Key
-        if dy == 0
-            dx = 0
-            dy = snake_size
-    
+        if key == Keys.DOWN # Down Arrow Key
+            if dy == 0
+                dx = 0
+                dy = snake_size
+        
+            end
         end
-    end
-    if key == Keys.LEFT # Left Arrow Key
-        if dx == 0
-            dx = -snake_size
-            dy = 0
+        if key == Keys.LEFT # Left Arrow Key
+            if dx == 0
+                dx = -snake_size
+                dy = 0
+            end
         end
-    end
-    if key == Keys.RIGHT # Right Arrow Key
-        if dx == 0
-            dx = snake_size
-            dy = 0
+        if key == Keys.RIGHT # Right Arrow Key
+            if dx == 0
+                dx = snake_size
+                dy = 0
+            end
         end
-    end
-    if key == Keys.ESCAPE # ESC Key
-        gamepause = !gamepause
-        play_sound("pause")
+        if key == Keys.ESCAPE # ESC Key
+            gamepause = !gamepause
+            play_sound("pause")
+        end
     end
 end
 
